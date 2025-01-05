@@ -2,18 +2,25 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"log"
 )
 
-type apiConfig struct {
+type ApiConfig struct {
 	Url struct {
 		PokeApiBaseUrl string            `json:"poke-api-base-url"`
 		Path           map[string]string `json:"path"`
 	} `json:"url"`
+	Client *Client
 }
 
-var configs apiConfig
-
-func Setup(conf interface{}) {
+func Setup(conf interface{}, client *Client) ApiConfig {
+	var configs ApiConfig
 	marshaledConf, _ := json.Marshal(conf.(map[string]interface{}))
-	conf = json.Unmarshal(marshaledConf, &configs)
+	err := json.Unmarshal(marshaledConf, &configs)
+	if err != nil {
+		log.Fatal("Could not setup the configs for the api.")
+	}
+	configs.Client = client
+
+	return configs
 }

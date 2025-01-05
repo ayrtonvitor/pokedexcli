@@ -1,15 +1,18 @@
 package main
 
+import (
+	"github.com/ayrtonvitor/pokedexcli/internal/pokeapi"
+)
+
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(pokeapi.ApiConfig) error
 }
 
-var commands map[string]cliCommand
-
-func setupCommands() {
-	var commandsDict = map[string]cliCommand{
+func setupCommands() map[string]*cliCommand {
+	commandMap, commandMapb := getMapCommands()
+	var commandsDict = map[string]*cliCommand{
 		"exit": {
 			name:        "exit",
 			description: "Exit the Pokedex\n",
@@ -18,7 +21,7 @@ func setupCommands() {
 		"help": {
 			name:        "help",
 			description: "Displays a help message\n",
-			callback:    commandHelp,
+			callback:    commandDummy,
 		},
 		"map": {
 			name:        "map",
@@ -31,5 +34,11 @@ func setupCommands() {
 			callback:    commandMapb,
 		},
 	}
-	commands = commandsDict
+	commandsDict["help"].callback = getHelpCommand(commandsDict)
+
+	return commandsDict
+}
+
+func commandDummy(pokeapi.ApiConfig) error {
+	return nil
 }

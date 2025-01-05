@@ -5,35 +5,27 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 )
 
-var currentPage int
-
-func GetNextLocations() ([]string, error) {
-	currentPage++
-	return GetLocations()
+func GetNextLocations(currentPage *int, config ApiConfig) ([]string, error) {
+	*currentPage += 1
+	return GetLocations(*currentPage, config)
 }
 
-func GetPrevLocations() ([]string, error) {
-	currentPage--
-	if currentPage < 1 {
-		currentPage = 0
-		return []string{}, nil
+func GetPrevLocations(currentPage *int, config ApiConfig) ([]string, error) {
+	if *currentPage > 1 {
+		*currentPage -= 1
+		return GetLocations(*currentPage, config)
 	}
-	return GetLocations()
+	return []string{}, nil
 }
 
-func GetLocations() ([]string, error) {
-	client := &http.Client{
-		Timeout: time.Second * 10,
-	}
-
+func GetLocations(currentPage int, config ApiConfig) ([]string, error) {
 	query := make(map[string]string)
 	query["offset"] = strconv.Itoa((currentPage - 1) * 20)
 	query["limit"] = "20"
 	url, err := buildURL(
-		configs.Url.PokeApiBaseUrl, configs.Url.Path["location"], query)
+		config.Url.PokeApiBaseUrl, config.Url.Path["location"], query)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +35,7 @@ func GetLocations() ([]string, error) {
 		return nil, fmt.Errorf("Could not build request:\n%w\n", err)
 	}
 
-	res, err := client.Do(req)
+	res, err := config.Client.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("Request error:\n%w\n", err)
 	}

@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/ayrtonvitor/pokedexcli/internal/pokeapi"
 )
 
 func cleanInput(text string) []string {
 	return strings.Fields(strings.ToLower(text))
 }
 
-func run() {
+func run(commands map[string]*cliCommand, apiConfig pokeapi.ApiConfig) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -23,18 +25,18 @@ func run() {
 		}
 
 		command := input[0]
-		tryExec(command)
+		tryExec(command, commands, apiConfig)
 	}
 }
 
-func tryExec(input string) {
+func tryExec(input string, commands map[string]*cliCommand, apiConfig pokeapi.ApiConfig) {
 	reg, ok := commands[input]
 	if !ok {
 		fmt.Println("Unknown command")
 		return
 	}
 
-	err := reg.callback()
+	err := reg.callback(apiConfig)
 	if err != nil {
 		fmt.Printf("%w", err.Error())
 	}

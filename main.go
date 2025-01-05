@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/ayrtonvitor/pokedexcli/internal/pokeapi"
 )
@@ -15,8 +16,8 @@ func main() {
 	if !ok {
 		log.Fatalf("Could not get the api configs")
 	}
-	pokeapi.Setup(apiConf)
 
-	setupCommands()
-	run()
+	client := pokeapi.NewClient(10 * time.Second)
+
+	run(setupCommands(), pokeapi.Setup(apiConf, &client))
 }
