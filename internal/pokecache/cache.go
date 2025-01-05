@@ -1,6 +1,7 @@
 package pokecache
 
 import (
+	"log"
 	"sync"
 	"time"
 )
@@ -16,14 +17,33 @@ type cacheEntry struct {
 	val       []byte
 }
 
-func NewCache(interval time.Duration) *Cache {
+func NewCache(configs map[string]interface{}) *Cache {
+	var interval int
+	if configs != nil {
+		intervalBytes, ok := configs["interval"]
+		if !ok {
+			log.Printf("Could not load cache cleaning interval. Using 1 minute")
+			interval = 1
+		}
+		interval, ok = intervalBytes.(int)
+		if !ok {
+			log.Printf("Could not load cache cleaning interval. Using 1 minute")
+			interval = 1
+		}
+		if interval == 0 {
+			log.Printf("Could not load cache cleaning interval. Using 1 minute")
+			interval = 1
+		}
+	}
 
 	newCache := Cache{
 		locations: make(map[string]cacheEntry),
 		mt:        sync.RWMutex{},
-		interval:  interval,
+		interval:  time.Duration(1) * time.Minute,
 	}
+
 	go newCache.reapLoop()
+
 	return &newCache
 }
 

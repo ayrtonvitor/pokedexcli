@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"time"
 
 	"github.com/ayrtonvitor/pokedexcli/internal/pokeapi"
 )
@@ -18,7 +17,7 @@ func main() {
 	}
 
 	commands := setupCommands()
-	apiClient := pokeapi.NewClient(10*time.Second, apiConf)
+	apiClient := pokeapi.NewClient(apiConf)
 
 	run(commands, apiClient)
 }

@@ -5,7 +5,7 @@ import (
 	"net/url"
 )
 
-func buildURL(baseURL, path string, params map[string]string) (string, error) {
+func buildURL(baseURL, path string, params [][2]string) (string, error) {
 	base, err := url.Parse(baseURL)
 	if err != nil {
 		return "", fmt.Errorf("Could not parse base url:\n%w\n", err)
@@ -14,8 +14,8 @@ func buildURL(baseURL, path string, params map[string]string) (string, error) {
 	base.Path = base.Path + path
 
 	query := base.Query()
-	for k, v := range params {
-		query.Add(k, v)
+	for _, pair := range params {
+		query.Add(pair[0], pair[1])
 	}
 	base.RawQuery = query.Encode()
 

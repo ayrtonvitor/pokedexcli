@@ -20,13 +20,22 @@ func (c *Client) GetPrevLocations(currentPage *int) ([]string, error) {
 }
 
 func (c *Client) getLocations(currentPage int) ([]string, error) {
-	query := make(map[string]string)
-	query["offset"] = strconv.Itoa((currentPage - 1) * 20)
-	query["limit"] = "20"
+	query := [][2]string{
+		[2]string{"offset", strconv.Itoa((currentPage - 1) * 20)},
+		[2]string{"limit", "20"},
+	}
 	url, err := buildURL(
 		c.config.Url.PokeApiBaseUrl, c.config.Url.Path["location"], query)
 	if err != nil {
 		return nil, err
+	}
+
+	if item, ok := c.cache.Get("url"); ok {
+		var values []string
+		err := json.Unmarshal(item, &values)
+		if err == nil {
+			return values, nil
+		}
 	}
 
 	req, err := http.NewRequest("GET", url, nil)
@@ -54,6 +63,11 @@ func (c *Client) getLocations(currentPage int) ([]string, error) {
 	for _, loc := range data.Results {
 		locations = append(locations, loc.Name)
 	}
+	toCache, err := json.Marshal(locations)
+	if err == nil {
+		c.cache.Add(url, toCache)
+	}
+
 	return locations, nil
 }
 
