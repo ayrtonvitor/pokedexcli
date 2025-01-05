@@ -15,9 +15,8 @@ func (c *Client) GetNextLocations(currentPage *int) ([]string, error) {
 func (c *Client) GetPrevLocations(currentPage *int) ([]string, error) {
 	if *currentPage > 1 {
 		*currentPage -= 1
-		return c.getLocations(*currentPage)
 	}
-	return []string{}, nil
+	return c.getLocations(*currentPage)
 }
 
 func (c *Client) getLocations(currentPage int) ([]string, error) {

@@ -21,12 +21,13 @@ func getMapCommands() (func(pokeapi.Client) error, func(pokeapi.Client) error) {
 	}
 
 	commandMapb := func(apiClient pokeapi.Client) error {
+		if currentPage <= 1 {
+			fmt.Print("You are on the first page\n\n")
+			currentPage = 1
+		}
 		locations, err := apiClient.GetPrevLocations(&currentPage)
 		if err != nil {
 			return err
-		}
-		if locations != nil && len(locations) == 0 {
-			fmt.Println("You are on the first page")
 		}
 		for _, loc := range locations {
 			fmt.Println(loc)
