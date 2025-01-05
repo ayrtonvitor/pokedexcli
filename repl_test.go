@@ -1,0 +1,55 @@
+package main
+
+import (
+	"testing"
+)
+
+func TestCleanInput(t *testing.T) {
+	cases := []struct {
+		input    string
+		expected []string
+	}{
+		{
+			input:    "",
+			expected: []string{},
+		},
+		{
+			input:    "helloworld",
+			expected: []string{"helloworld"},
+		},
+		{
+			input:    "hello world",
+			expected: []string{"hello", "world"},
+		},
+		{
+			input:    " hello world  ",
+			expected: []string{"hello", "world"},
+		},
+		{
+			input:    " hello  world  ",
+			expected: []string{"hello", "world"},
+		},
+		{
+			input:    "Charmander Bulbassaur PIKACHU",
+			expected: []string{"charmander", "bulbassaur", "pikachu"},
+		},
+	}
+
+	for _, c := range cases {
+		actual := cleanInput(c.input)
+		if len(actual) != len(c.expected) {
+			t.Errorf("Result does not match\nExpected: %#v\nActual: %#v\n",
+				c.expected, actual)
+		}
+
+		for i := range actual {
+			word := actual[i]
+			expectedWord := c.expected[i]
+
+			if word != expectedWord {
+				t.Errorf("Result does not match\nExpected: %#v\nActual: %#v\n",
+					c.expected, actual)
+			}
+		}
+	}
+}
