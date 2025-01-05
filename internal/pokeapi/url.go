@@ -8,7 +8,7 @@ import (
 func buildURL(baseURL, path string, params [][2]string) (string, error) {
 	base, err := url.Parse(baseURL)
 	if err != nil {
-		return "", fmt.Errorf("Could not parse base url:\n%w\n", err)
+		return "", fmt.Errorf("Could not parse base url:\n%v\n", err)
 	}
 
 	base.Path = base.Path + path

@@ -40,12 +40,12 @@ func (c *Client) getLocations(currentPage int) ([]string, error) {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Could not build request:\n%w\n", err)
+		return nil, fmt.Errorf("Could not build request:\n%v\n", err)
 	}
 
 	res, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Request error:\n%w\n", err)
+		return nil, fmt.Errorf("Request error:\n%v\n", err)
 	}
 	defer res.Body.Close()
 

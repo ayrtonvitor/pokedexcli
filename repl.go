@@ -38,6 +38,6 @@ func tryExec(input string, commands map[string]*cliCommand, apiClient pokeapi.Cl
 
 	err := reg.callback(apiClient)
 	if err != nil {
-		fmt.Printf("%w", err.Error())
+		fmt.Printf("%s", err.Error())
 	}
 }

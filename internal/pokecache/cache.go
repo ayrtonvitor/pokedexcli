@@ -23,26 +23,26 @@ func NewCache(configs map[string]interface{}) *Cache {
 		intervalBytes, ok := configs["interval"]
 		if !ok {
 			log.Printf("Could not load cache cleaning interval. Using 1 minute")
-			interval = 1
+			interval = 60 * 1000
 		}
 		interval, ok = intervalBytes.(int)
 		if !ok {
 			log.Printf("Could not load cache cleaning interval. Using 1 minute")
-			interval = 1
+			interval = 60 * 1000
 		}
 		if interval == 0 {
 			log.Printf("Could not load cache cleaning interval. Using 1 minute")
-			interval = 1
+			interval = 60 * 1000
 		}
 	}
 
 	newCache := Cache{
 		locations: make(map[string]cacheEntry),
 		mt:        sync.RWMutex{},
-		interval:  time.Duration(1) * time.Minute,
+		interval:  time.Duration(interval) * time.Millisecond,
 	}
 
-	go newCache.reapLoop()
+	go (&newCache).reapLoop()
 
 	return &newCache
 }
@@ -80,7 +80,7 @@ func (c *Cache) clearOldEntries(now time.Time) {
 	defer c.mt.Unlock()
 
 	for k, v := range c.locations {
-		if now.Sub(v.createdAt) < c.interval {
+		if now.Sub(v.createdAt) > c.interval {
 			delete(c.locations, k)
 		}
 	}
