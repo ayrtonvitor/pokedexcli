@@ -1,3 +1,10 @@
 {
-    "pokeApiBaseUrl": "https://pokeapi.co/api/v2/"
+    "api": {
+        "url": {
+            "poke-api-base-url": "https://pokeapi.co/api/v2/",
+            "path": {
+                "location": "location-area"
+            }
+        }
+    }
 }
