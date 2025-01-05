@@ -23,7 +23,19 @@ func run() {
 		}
 
 		command := input[0]
+		tryExec(command)
+	}
+}
 
-		fmt.Printf("Your command was: %s\n", command)
+func tryExec(input string) {
+	reg, ok := commands[input]
+	if !ok {
+		fmt.Println("Unknown command")
+		return
+	}
+
+	err := reg.callback()
+	if err != nil {
+		fmt.Printf("%w", err.Error())
 	}
 }
