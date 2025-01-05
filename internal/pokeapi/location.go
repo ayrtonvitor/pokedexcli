@@ -8,7 +8,21 @@ import (
 	"time"
 )
 
-var locationOffset int
+var currentPage int
+
+func GetNextLocations() ([]string, error) {
+	currentPage++
+	return GetLocations()
+}
+
+func GetPrevLocations() ([]string, error) {
+	currentPage--
+	if currentPage < 1 {
+		currentPage = 0
+		return []string{}, nil
+	}
+	return GetLocations()
+}
 
 func GetLocations() ([]string, error) {
 	client := &http.Client{
@@ -16,7 +30,7 @@ func GetLocations() ([]string, error) {
 	}
 
 	query := make(map[string]string)
-	query["offset"] = strconv.Itoa(locationOffset)
+	query["offset"] = strconv.Itoa((currentPage - 1) * 20)
 	query["limit"] = "20"
 	url, err := buildURL(
 		configs.Url.PokeApiBaseUrl, configs.Url.Path["location"], query)
@@ -45,7 +59,6 @@ func GetLocations() ([]string, error) {
 		return nil, fmt.Errorf("Could not decode response\n")
 	}
 
-	locationOffset += 20
 	locations := []string{}
 	for _, loc := range data.Results {
 		locations = append(locations, loc.Name)
@@ -54,11 +67,7 @@ func GetLocations() ([]string, error) {
 }
 
 type locationRes struct {
-	Count    int
-	Next     string
-	Previous string
-	Results  []struct {
+	Results []struct {
 		Name string `json:"name"`
-		Url  string
 	} `json:"results"`
 }

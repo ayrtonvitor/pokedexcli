@@ -25,6 +25,11 @@ func setupCommands() {
 			description: "Lists the next page of locations in the map\n",
 			callback:    commandMap,
 		},
+		"mapb": {
+			name:        "mapb",
+			description: "Lists the previous page of locations in the map\n",
+			callback:    commandMapb,
+		},
 	}
 	commands = commandsDict
 }
