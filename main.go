@@ -17,7 +17,8 @@ func main() {
 		log.Fatalf("Could not get the api configs")
 	}
 
+	commands := setupCommands()
 	apiClient := pokeapi.NewClient(10*time.Second, apiConf)
 
-	run(setupCommands(), apiClient)
+	run(commands, apiClient)
 }

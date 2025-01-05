@@ -12,9 +12,9 @@ type Client struct {
 	config     apiConfig
 }
 
-func NewClient(timeout time.Duration, conf interface{}) Client {
+func NewClient(timeout time.Duration, conf map[string]interface{}) Client {
 	var config apiConfig
-	marshaledConf, _ := json.Marshal(conf.(map[string]interface{}))
+	marshaledConf, _ := json.Marshal(conf)
 	err := json.Unmarshal(marshaledConf, &config)
 	if err != nil {
 		log.Fatal("Could not setup the configs for the api.")
