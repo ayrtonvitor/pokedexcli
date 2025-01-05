@@ -6,11 +6,11 @@ import (
 	"github.com/ayrtonvitor/pokedexcli/internal/pokeapi"
 )
 
-func getMapCommands() (func(pokeapi.ApiConfig) error, func(pokeapi.ApiConfig) error) {
+func getMapCommands() (func(pokeapi.Client) error, func(pokeapi.Client) error) {
 	currentPage := 0
 
-	commandMap := func(config pokeapi.ApiConfig) error {
-		locations, err := pokeapi.GetNextLocations(&currentPage, config)
+	commandMap := func(apiClient pokeapi.Client) error {
+		locations, err := apiClient.GetNextLocations(&currentPage)
 		if err != nil {
 			return err
 		}
@@ -20,8 +20,8 @@ func getMapCommands() (func(pokeapi.ApiConfig) error, func(pokeapi.ApiConfig) er
 		return nil
 	}
 
-	commandMapb := func(config pokeapi.ApiConfig) error {
-		locations, err := pokeapi.GetPrevLocations(&currentPage, config)
+	commandMapb := func(apiClient pokeapi.Client) error {
+		locations, err := apiClient.GetPrevLocations(&currentPage)
 		if err != nil {
 			return err
 		}

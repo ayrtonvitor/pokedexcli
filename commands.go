@@ -7,7 +7,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(pokeapi.ApiConfig) error
+	callback    func(pokeapi.Client) error
 }
 
 func setupCommands() map[string]*cliCommand {
@@ -39,6 +39,6 @@ func setupCommands() map[string]*cliCommand {
 	return commandsDict
 }
 
-func commandDummy(pokeapi.ApiConfig) error {
+func commandDummy(pokeapi.Client) error {
 	return nil
 }
