@@ -9,7 +9,7 @@ import (
 func main() {
 	conf, err := loadConfig()
 	if err != nil {
-		log.Fatalf("Startup error: %w\n", err.Error())
+		log.Fatalf("Startup error: %v\n", err.Error())
 	}
 	apiConf, ok := conf["api"]
 	if !ok {

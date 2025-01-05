@@ -20,6 +20,11 @@ func setupCommands() {
 			description: "Displays a help message\n",
 			callback:    commandHelp,
 		},
+		"map": {
+			name:        "map",
+			description: "Lists the next page of locations in the map\n",
+			callback:    commandMap,
+		},
 	}
 	commands = commandsDict
 }
