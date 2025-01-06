@@ -7,7 +7,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(pokeapi.Client) error
+	callback    func(pokeapi.Client, ...string) error
 }
 
 func setupCommands() map[string]*cliCommand {
@@ -33,12 +33,17 @@ func setupCommands() map[string]*cliCommand {
 			description: "Lists the previous page of locations in the map\n",
 			callback:    commandMapb,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Lists all the pokemon in an area",
+			callback:    commandExplore,
+		},
 	}
 	commandsDict["help"].callback = getHelpCommand(commandsDict)
 
 	return commandsDict
 }
 
-func commandDummy(pokeapi.Client) error {
+func commandDummy(pokeapi.Client, ...string) error {
 	return nil
 }

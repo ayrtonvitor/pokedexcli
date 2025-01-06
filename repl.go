@@ -25,18 +25,20 @@ func run(commands map[string]*cliCommand, apiClient pokeapi.Client) {
 		}
 
 		command := input[0]
-		tryExec(command, commands, apiClient)
+		params := input[1:]
+		tryExec(command, commands, apiClient, params)
 	}
 }
 
-func tryExec(input string, commands map[string]*cliCommand, apiClient pokeapi.Client) {
+func tryExec(input string, commands map[string]*cliCommand, apiClient pokeapi.Client,
+	params []string) {
 	reg, ok := commands[input]
 	if !ok {
 		fmt.Println("Unknown command")
 		return
 	}
 
-	err := reg.callback(apiClient)
+	err := reg.callback(apiClient, params...)
 	if err != nil {
 		fmt.Printf("%s", err.Error())
 	}
