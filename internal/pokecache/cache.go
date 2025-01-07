@@ -17,29 +17,15 @@ type cacheEntry struct {
 	val       []byte
 }
 
-func NewCache(configs map[string]interface{}) *Cache {
-	var interval int
-	if configs != nil {
-		intervalBytes, ok := configs["interval"]
-		if !ok {
-			log.Printf("Could not load cache cleaning interval. Using 1 minute")
-			interval = 60 * 1000
-		}
-		interval, ok = intervalBytes.(int)
-		if !ok {
-			log.Printf("Could not load cache cleaning interval. Using 1 minute")
-			interval = 60 * 1000
-		}
-		if interval == 0 {
-			log.Printf("Could not load cache cleaning interval. Using 1 minute")
-			interval = 60 * 1000
-		}
+func NewCache(configs CacheConfig) *Cache {
+	if configs.Interval == 0 {
+		log.Printf("Could not load cache cleaning interval. Using 1 minute")
 	}
 
 	newCache := Cache{
 		locations: make(map[string]cacheEntry),
 		mt:        sync.RWMutex{},
-		interval:  time.Duration(interval) * time.Millisecond,
+		interval:  time.Duration(configs.Interval) * time.Millisecond,
 	}
 
 	go (&newCache).reapLoop()

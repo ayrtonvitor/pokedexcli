@@ -21,7 +21,7 @@ func NewClient(conf map[string]interface{}) Client {
 	marshaledConf, _ := json.Marshal(conf)
 	err := json.Unmarshal(marshaledConf, &config)
 	if err != nil {
-		log.Fatal("Could not setup the configs for the api.")
+		log.Fatalf("Could not setup the configs for the api:\n%v", err.Error())
 	}
 	timeout := config.Timeout
 	if timeout == 0 {
@@ -29,10 +29,10 @@ func NewClient(conf map[string]interface{}) Client {
 		timeout = 10
 	}
 
-	if config.Cache == nil {
-		log.Println("Could not load cache configs. Using defaults")
-		config.Cache = map[string]interface{}{
-			"interval": 10,
+	if config.Cache == (pokecache.CacheConfig{}) {
+		log.Println("Could not load cache configs for client. Using defaults")
+		config.Cache = pokecache.CacheConfig{
+			Interval: 60 * 1000,
 		}
 	}
 	cache := pokecache.NewCache(config.Cache)
