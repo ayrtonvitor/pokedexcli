@@ -4,11 +4,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type Pokemon struct {
 	Name    string `json:"name"`
 	BaseExp int    `json:"base_experience"`
+	Height  int    `json:"height"`
+	Weight  int    `json:"weight"`
+	Stats   []struct {
+		BaseStat int `json:"base_stat"`
+		Stat     struct {
+			Name string `json:"name"`
+		} `json:"stat"`
+	} `json:"stats"`
+	Types []struct {
+		Type struct {
+			Name string `json:"name"`
+		} `json:"type"`
+	} `json:"types"`
 }
 
 func (c *Client) GetPokemon(pokeName string) (Pokemon, error) {
@@ -59,4 +73,23 @@ func (c *Client) GetUncatchableBaseExp() (int, error) {
 		return 0, err
 	}
 	return poke.BaseExp, nil
+}
+
+func (p Pokemon) String() string {
+	var statusBuilder strings.Builder
+	for _, item := range p.Stats {
+		statusBuilder.WriteString(fmt.Sprintf(" -%s: %d\n", item.Stat.Name, item.BaseStat))
+	}
+	stats := statusBuilder.String()
+	var typesBuilder strings.Builder
+	for _, item := range p.Types {
+		typesBuilder.WriteString(fmt.Sprintf(" - %s\n", item.Type.Name))
+	}
+	types := typesBuilder.String()
+	return fmt.Sprintf(
+		"Name: %v\n"+
+			"Height: %v\n"+
+			"Weight: %v\n"+
+			"Stats:\n%v"+
+			"Types:\n%v", p.Name, p.Height, p.Weight, stats, types)
 }

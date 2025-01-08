@@ -7,8 +7,7 @@ import (
 	"github.com/ayrtonvitor/pokedexcli/internal/pokeapi"
 )
 
-func commandCatch() func(pokeapi.Client, ...string) error {
-	pokedex := make(map[string]pokeapi.Pokemon)
+func commandCatch(pokedex *map[string]pokeapi.Pokemon) func(pokeapi.Client, ...string) error {
 	rng := rand.New(rand.NewSource(42))
 
 	innerCommandcatch := func(apiClient pokeapi.Client, params ...string) error {
@@ -29,7 +28,7 @@ func commandCatch() func(pokeapi.Client, ...string) error {
 		fmt.Printf("Throwing a Pokeball at %s...\n", poke)
 		if tryCatch(pokemon, uncatchableExp, rng) {
 			fmt.Printf("%s was caught!\n", pokemon.Name)
-			pokedex[pokemon.Name] = pokemon
+			(*pokedex)[pokemon.Name] = pokemon
 			return nil
 		}
 		fmt.Printf("%s escaped!\n", pokemon.Name)

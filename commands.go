@@ -12,6 +12,7 @@ type cliCommand struct {
 
 func setupCommands() map[string]*cliCommand {
 	commandMap, commandMapb := getMapCommands()
+	commandInspect, pokedex := getInspectCommand()
 	var commandsDict = map[string]*cliCommand{
 		"exit": {
 			name:        "exit",
@@ -41,7 +42,12 @@ func setupCommands() map[string]*cliCommand {
 		"catch": {
 			name:        "catch",
 			description: "Saves a pokemon to the pokedex",
-			callback:    commandCatch(),
+			callback:    commandCatch(pokedex),
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect pokemon in the pokedex",
+			callback:    commandInspect,
 		},
 	}
 	commandsDict["help"].callback = getHelpCommand(commandsDict)
