@@ -38,6 +38,11 @@ func setupCommands() map[string]*cliCommand {
 			description: "Lists all the pokemon in an area",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Saves a pokemon to the pokedex",
+			callback:    commandCatch(),
+		},
 	}
 	commandsDict["help"].callback = getHelpCommand(commandsDict)
 

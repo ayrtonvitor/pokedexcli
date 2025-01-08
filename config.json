@@ -3,7 +3,8 @@
         "url": {
             "poke-api-base-url": "https://pokeapi.co/api/v2/",
             "path": {
-                "location": "location-area"
+                "location": "location-area",
+                "pokemon": "pokemon"
             }
         },
         "timeout": 10,
